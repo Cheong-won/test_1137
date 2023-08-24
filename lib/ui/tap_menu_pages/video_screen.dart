@@ -13,9 +13,8 @@ class _VideoScreen extends State<VideoScreen> {
   var logger = Logger();
 
   List<String> urls = [
-
-    'https://photos.onedrive.com/share/23CD10C2E640A146!158?cid=23CD10C2E640A146&authkey=!AE3NSNMSBk__gAs&ithint=video&e=HZK54N',
-    'https://photos.onedrive.com/share/23CD10C2E640A146!158?cid=23CD10C2E640A146&authkey=!AE3NSNMSBk__gAs&ithint=video&e=HZK54N',
+    'assets/videos/ad_video1.mp4',
+    'assets/videos/ad_video2.mp4',
   ];
   int currentIndex = 0;
   late VideoPlayerController _controller;
@@ -24,15 +23,13 @@ class _VideoScreen extends State<VideoScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller =
-    VideoPlayerController.networkUrl(Uri.parse(urls[currentIndex]))
+    _controller = VideoPlayerController.asset(urls[currentIndex])
       ..addListener(checkVideo)
       ..initialize().then((_) {
         setState(() {});
       })
       ..play();
   }
-
 
   void checkVideo() {
     if (!_controller.value.isPlaying &&
@@ -41,40 +38,39 @@ class _VideoScreen extends State<VideoScreen> {
       if (currentIndex < urls.length - 1) {
         currentIndex++;
         _controller.dispose();
-        _controller =
-            VideoPlayerController.networkUrl(Uri.parse(urls[currentIndex]))
-              ..initialize().then((_) {
-                setState(() {});
-              })
-              ..play();
+        _controller = VideoPlayerController.asset(urls[currentIndex])
+          ..initialize().then((_) {
+            setState(() {});
+          })
+          ..play();
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      VideoPlayer(_controller),
-                      ClosedCaption(text: _controller.value.caption.text),
-                      VideoProgressIndicator(_controller, allowScrubbing: false),
-                    ],
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    VideoPlayer(_controller),
+                    ClosedCaption(text: _controller.value.caption.text),
+                    VideoProgressIndicator(_controller, allowScrubbing: false),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 
