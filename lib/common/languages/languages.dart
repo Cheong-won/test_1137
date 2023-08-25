@@ -9,6 +9,10 @@ class Languages extends Translations {
           'tab_menu2': 'My',
           'tab1_title': 'tab_menu1'.tr,
           'tab2_title': 'tab_menu2'.tr,
+          'sub_menu1' : 'sub_menu1',
+          'sub_menu1' : 'sub_menu2',
+          'sub_menu1' : 'sub_menu3',
+          'sub_menu1' : 'sub_menu4',
         },
 
         // 'en_US':
