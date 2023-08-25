@@ -20,21 +20,13 @@ class ViewRecord extends StatefulWidget {
 
 class _ViewRecordState extends State<ViewRecord> {
   final _recordCnt = Get.find<RecordController>();
-  List<RecordItem>? _recordItems;
-  bool _isLoading = true; // 로딩 상태를 추적하는 변수
 
   @override
   void initState() {
     super.initState();
-    _loadRecords();
+    _recordCnt.loadRecords();
   }
 
-  _loadRecords() async {
-    _recordItems = await _recordCnt.records();
-    setState(() {
-      _isLoading = false; // 데이터 로딩이 완료되면 _isLoading을 false로 설정
-    });
-  }
 
   String formatDateTime(String str) {
     int timestamp = int.parse(str);
@@ -49,35 +41,44 @@ class _ViewRecordState extends State<ViewRecord> {
       children: [
         CommonHeader(onBackButtonPressed: widget.onBackButtonPressed),
         Expanded(
-          child: _isLoading
-              ? Center(child: CircularProgressIndicator()) // 로딩 중이면 프로그레스 바 표시
-              : (_recordItems == null || _recordItems!.isEmpty)
-              ? Center(child: Text("No records available"))
-              : ListView.builder(
-            itemCount: _recordItems!.length,
-            itemBuilder: (context, index) {
-              final record = _recordItems![index % _recordItems!.length];
-              return Column(
-                children: [
-                  Card(
-                    elevation: 5.0,
-                    margin: EdgeInsets.all(8.0),
-                    child: ListTile(
-                      title: Text(formatDateTime(record.date.toString())),
-                      subtitle: Text(record.desc),
-                    ),
-                  ),
-                  const Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                  ),
-                ],
+          child: Obx(
+                () {
+              if (_recordCnt.isLoading) { // _isLoading도 RxBool 타입이어야 합니다.
+                return Center(child: CircularProgressIndicator());
+              }
+
+              if (_recordCnt.recordItems == null || _recordCnt.recordItems !.isEmpty) {
+                return Center(child: Text("No records available"));
+              }
+
+              return ListView.builder(
+                itemCount: _recordCnt.recordItems !.length,
+                itemBuilder: (context, index) {
+                  final record = _recordCnt.recordItems ![index % _recordCnt.recordItems !.length];
+                  return Column(
+                    children: [
+                      Card(
+                        elevation: 5.0,
+                        margin: EdgeInsets.all(8.0),
+                        child: ListTile(
+                          title: Text(formatDateTime(record.date.toString())),
+                          subtitle: Text(record.desc),
+                        ),
+                      ),
+                      const Divider(
+                        thickness: 1.0,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),
         ),
       ],
     );
+
   }
 }
 
