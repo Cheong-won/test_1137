@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 import '../common/sub_menu_widget.dart';
 import 'create_record.dart';
 import 'login.dart';
+import 'login_widget.dart';
 
 enum ScreenType {
   video,
@@ -22,14 +23,15 @@ class MainScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _MainScreen();
 }
 
-class _MainScreen extends State<MainScreen> {
-  final GlobalKey bottomNavigationKey = GlobalKey();
+class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
+  GlobalKey bottomNavigationKey = GlobalKey();
   var logger = Logger();
   var selectedIndex = 0;
   double _iconXPosition = 0;
   bool _showSubMenu = false;
   ScreenType currentScreenType = ScreenType.video;
   SubMenuIndex subMenuIndex = SubMenuIndex.none;
+  bool isKeyboardVisible = false;
 
   static final List<String> _titles = <String>[
     'tab_menu1'.tr,
@@ -42,6 +44,26 @@ class _MainScreen extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final value = MediaQuery.of(context).viewInsets.bottom;
+    if (isKeyboardVisible == (value != 0)) {
+      return;
+    }
+    if (value != 0) {
+      setState(() => isKeyboardVisible = true);
+    } else {
+      setState(() => isKeyboardVisible = false);
+    }
+    logger.d('isKeyboardVisible: $isKeyboardVisible');
   }
   void _setCurrentScreen(ScreenType screenType) {
     setState(() {
@@ -90,6 +112,10 @@ class _MainScreen extends State<MainScreen> {
         // 첫 번째 또는 두 번째 탭이 아닌 경우에는 서브 메뉴를 숨김
         _showSubMenu = false;
         selectedIndex = index;
+        if (index == 2) {
+          _showLoginPopup(context);
+          return;
+        }
       }
     });
   }
@@ -106,13 +132,20 @@ class _MainScreen extends State<MainScreen> {
       _showSubMenu = false;
     });
   }
+  void _showLoginPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return LoginWidget();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // 화면의 너비
-
     return Scaffold(
-      bottomNavigationBar: currentScreenType == ScreenType.video
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar: (currentScreenType == ScreenType.video && !isKeyboardVisible)
        ? BottomNavigationBar(
         key: bottomNavigationKey,
         items: <BottomNavigationBarItem>[
@@ -133,27 +166,29 @@ class _MainScreen extends State<MainScreen> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ): null,
-      body: Stack(
-        children: [
-          // 컨텐츠 내용
-          Container(
-            alignment: Alignment.center,
-            child: _getCurrentScreen(),
-          ),
-          if (_showSubMenu)
-            Positioned(
-              left: _iconXPosition,
-              bottom: 0.h,
-              child: SubMenuWidget(
-                onTapSubMenu: (subMenuIndex) {
-                  setState(() {
-                    logger.d('onTapSubMenu: $subMenuIndex');
-                    _handleSubMenuTap(subMenuIndex);
-                  });
-                },
-              ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            // 컨텐츠 내용
+            Container(
+              alignment: Alignment.center,
+              child: _getCurrentScreen(),
             ),
-        ],
+            if (_showSubMenu)
+              Positioned(
+                left: _iconXPosition,
+                bottom: 0.h,
+                child: SubMenuWidget(
+                  onTapSubMenu: (subMenuIndex) {
+                    setState(() {
+                      logger.d('onTapSubMenu: $subMenuIndex');
+                      _handleSubMenuTap(subMenuIndex);
+                    });
+                  },
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -49,14 +49,12 @@ class _VideoScreen extends State<VideoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: AspectRatio(
+    return Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              AspectRatio(
                 aspectRatio: _controller.value.aspectRatio,
                 child: Stack(
                   alignment: Alignment.bottomCenter,
@@ -67,9 +65,9 @@ class _VideoScreen extends State<VideoScreen> {
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+
       ),
     );
   }
