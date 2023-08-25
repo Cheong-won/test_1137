@@ -143,31 +143,31 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      bottomNavigationBar: (currentScreenType == ScreenType.video && !isKeyboardVisible)
-       ? BottomNavigationBar(
-        key: bottomNavigationKey,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: 'tab_menu1'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.open_in_new_rounded),
-            label: 'tab_menu2'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.open_in_new_rounded),
-            label: 'tab_menu3'.tr,
-          ),
-        ],
-        currentIndex: selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ): null,
-      body: SingleChildScrollView(
-        child: Stack(
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        bottomNavigationBar: (currentScreenType == ScreenType.video && !isKeyboardVisible)
+         ? BottomNavigationBar(
+          key: bottomNavigationKey,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.home),
+              label: 'tab_menu1'.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.open_in_new_rounded),
+              label: 'tab_menu2'.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.open_in_new_rounded),
+              label: 'tab_menu3'.tr,
+            ),
+          ],
+          currentIndex: selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ): null,
+        body: Stack(
           children: [
             // 컨텐츠 내용
             Container(

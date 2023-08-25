@@ -1,3 +1,4 @@
+import 'package:fittrix/ui/common/common_header.dart';
 import 'package:fittrix/ui/common/sub_menu_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -13,18 +14,16 @@ class CreateRecord extends StatefulWidget {
 class _CreateRecord extends State<CreateRecord> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.green,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: widget.onBackButtonPressed,
+    return Column(
+      children: [
+        CommonHeader(onBackButtonPressed: widget.onBackButtonPressed),
+        Expanded(
+          child: Container(
+            alignment: Alignment.bottomCenter,
+            color: Colors.white,
+          ),
         ),
-        title: const Text('Create Record'),
-      ),
-      body: Container(
-        alignment: Alignment.bottomCenter,
-      ),
+      ],
     );
   }
 }

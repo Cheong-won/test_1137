@@ -86,7 +86,7 @@ class _MainApplicationState extends State<MainApplication>
   @override
   Widget build(BuildContext context) {
    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-     statusBarColor: Colors.transparent, // 투명색
+     statusBarColor: Colors.white, // 투명색
      statusBarIconBrightness: Brightness.dark
    ));
    return ScreenUtilInit(

@@ -1,3 +1,4 @@
+import 'package:fittrix/ui/common/common_header.dart';
 import 'package:fittrix/ui/common/sub_menu_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -49,38 +50,36 @@ class _ViewRecordState extends State<ViewRecord> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.green,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: widget.onBackButtonPressed,
-        ),
-        title: const Text('View Record'),
-      ),
-      body: ListView.builder(
-        itemCount: null, // null로 설정하여 무한히 스크롤
-        itemBuilder: (context, index) {
-          final record = records[index % records.length]; // records의 길이를 넘지 않도록 % 연산을 사용
+    return Column(
+      children: [
+        CommonHeader(onBackButtonPressed: widget.onBackButtonPressed),
+        Expanded(
+          child: ListView.builder(
+            itemCount: null, // null로 설정하여 무한히 스크롤
+            itemBuilder: (context, index) {
+              final record = records[index % records.length]; // records의 길이를 넘지 않도록 % 연산을 사용
 
-          return Column(
-            children: [
-              Card(
-                elevation: 5.0, // 카드의 그림자 깊이 설정
-                margin: EdgeInsets.all(8.0), // 카드의 마진 설정.
-                child: ListTile(
-                  title: Text(formatDateTime(record.date)), // 날짜를 문자열로 표시
-                  subtitle: Text(record.memo), // 메모를 표시
-                ),
-              ),
-              const Divider(
-                thickness: 1.0, // 나눔선의 두께 설정
-                color: Colors.grey, // 나눔선의 색상 설정
-              ),
-            ],
-          );
-        },
-      ),
+              return Column(
+                children: [
+                  Card(
+                    elevation: 5.0,
+                    margin: EdgeInsets.all(8.0),
+                    child: ListTile(
+                      title: Text(formatDateTime(record.date)),
+                      subtitle: Text(record.memo),
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
+
   }
 }
