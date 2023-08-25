@@ -20,7 +20,7 @@ class _CreateRecord extends State<CreateRecord> {
         Expanded(
           child: Container(
             alignment: Alignment.bottomCenter,
-            color: Colors.white,
+            color: Colors.yellow,
           ),
         ),
       ],
