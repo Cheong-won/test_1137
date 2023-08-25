@@ -1,13 +1,10 @@
 import 'package:fittrix/ui/common/common_header.dart';
 import 'package:fittrix/ui/common/sub_menu_widget.dart';
 import 'package:flutter/material.dart';
-
-class RecordItem {
-  final DateTime date;
-  final String memo;
-
-  RecordItem(this.date, this.memo);
-}
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import '../../controller/record_controller.dart';
+import '../../models/response/record_item.dart';
 
 class ViewRecord extends StatefulWidget {
   const ViewRecord({
@@ -22,28 +19,26 @@ class ViewRecord extends StatefulWidget {
 }
 
 class _ViewRecordState extends State<ViewRecord> {
-  //샘플 데이터
-  List<RecordItem> records = [
-    RecordItem(DateTime(2023, 6, 1), 'test1'),
-    RecordItem(DateTime(2023, 6, 2), 'test2'),
-    RecordItem(DateTime(2023, 6, 3), 'test3'),
-    RecordItem(DateTime(2023, 6, 4), 'test4'),
-    RecordItem(DateTime(2023, 6, 5), 'test5'),
-    RecordItem(DateTime(2023, 6, 30), 'test30'),
-  ];
+  final _recordCnt = Get.find<RecordController>();
+  List<RecordItem>? _recordItems;
+  bool _isLoading = true; // 로딩 상태를 추적하는 변수
 
   @override
   void initState() {
     super.initState();
-    sortRecordsInDescendingOrder();
+    _loadRecords();
   }
 
-  void sortRecordsInDescendingOrder() {
-    records.sort((a, b) => b.date.compareTo(a.date));
+  _loadRecords() async {
+    _recordItems = await _recordCnt.records();
+    setState(() {
+      _isLoading = false; // 데이터 로딩이 완료되면 _isLoading을 false로 설정
+    });
   }
 
-  //날짜 형식을 문자열로 변환
-  String formatDateTime(DateTime dateTime) {
+  String formatDateTime(String str) {
+    int timestamp = int.parse(str);
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     return "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} "
         "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
   }
@@ -54,19 +49,22 @@ class _ViewRecordState extends State<ViewRecord> {
       children: [
         CommonHeader(onBackButtonPressed: widget.onBackButtonPressed),
         Expanded(
-          child: ListView.builder(
-            itemCount: null, // null로 설정하여 무한히 스크롤
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator()) // 로딩 중이면 프로그레스 바 표시
+              : (_recordItems == null || _recordItems!.isEmpty)
+              ? Center(child: Text("No records available"))
+              : ListView.builder(
+            itemCount: _recordItems!.length,
             itemBuilder: (context, index) {
-              final record = records[index % records.length]; // records의 길이를 넘지 않도록 % 연산을 사용
-
+              final record = _recordItems![index % _recordItems!.length];
               return Column(
                 children: [
                   Card(
                     elevation: 5.0,
                     margin: EdgeInsets.all(8.0),
                     child: ListTile(
-                      title: Text(formatDateTime(record.date)),
-                      subtitle: Text(record.memo),
+                      title: Text(formatDateTime(record.date.toString())),
+                      subtitle: Text(record.desc),
                     ),
                   ),
                   const Divider(
@@ -80,6 +78,6 @@ class _ViewRecordState extends State<ViewRecord> {
         ),
       ],
     );
-
   }
 }
+

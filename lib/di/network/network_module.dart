@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import '../../common/preference/preference.dart';
 import '../../common/util/pretty_dio_logger.dart';
-import '../../services/auth_service_api.dart';
+import '../../services/record_service_api.dart';
 import '../di.dart';
 import '../env/build_config.dart';
 
@@ -56,8 +56,8 @@ abstract class NetworkModule {
   }
 
   @injectable
-  AuthServiceAPI get authSvc {
-    return AuthServiceAPI(
+  RecordServiceAPI get recordSvc {
+    return RecordServiceAPI(
       getIt<Dio>(),
       baseUrl: getIt<BuildConfig>().apiUrl,
     );

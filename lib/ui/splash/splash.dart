@@ -1,12 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:logger/logger.dart';
+
 import '../../common/preference/preference.dart';
 import '../../common/route/test_navigator.dart';
 import '../../common/route/test_router.dart';
-import '../../controller/auth_controller.dart';
 import '../../di/di.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,7 +14,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreen extends State<SplashScreen> with TickerProviderStateMixin {
-  final _authCnt = Get.find<AuthController>();
   var logger = Logger();
   bool versionCheck = true;
   bool implCompleted = false;
