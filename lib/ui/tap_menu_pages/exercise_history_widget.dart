@@ -6,8 +6,8 @@ import 'package:get/get_core/src/get_main.dart';
 import '../../controller/record_controller.dart';
 import '../../models/response/record_item.dart';
 
-class ViewRecord extends StatefulWidget {
-  const ViewRecord({
+class ExerciseHistoryWidget extends StatefulWidget {
+  const ExerciseHistoryWidget({
     Key? key,
     required this.onBackButtonPressed,
     required SubMenuIndex subMenuIndex,
@@ -15,10 +15,10 @@ class ViewRecord extends StatefulWidget {
   final VoidCallback onBackButtonPressed;
 
   @override
-  State<StatefulWidget> createState() => _ViewRecordState();
+  State<StatefulWidget> createState() => _ExerciseHistoryWidgetState();
 }
 
-class _ViewRecordState extends State<ViewRecord> {
+class _ExerciseHistoryWidgetState extends State<ExerciseHistoryWidget> {
   final _recordCnt = Get.find<RecordController>();
 
   @override

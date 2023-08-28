@@ -1,21 +1,20 @@
+import 'package:fittrix/ui/tap_menu_pages/Exercise_history_widget.dart';
+import 'package:fittrix/ui/tap_menu_pages/Exercise_record_widget.dart';
 import 'package:fittrix/ui/tap_menu_pages/video_screen.dart';
-import 'package:fittrix/ui/tap_menu_pages/view_record.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 import '../common/sub_menu_widget.dart';
-import 'create_record.dart';
 import 'login.dart';
 import 'login_widget.dart';
 
 enum ScreenType {
   video,
-  createRecord,
-  viewRecord
+  exerciseRecord,
+  exerciseHistory
 }
-
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -30,8 +29,9 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
   double _iconXPosition = 0;
   bool _showSubMenu = false;
   ScreenType currentScreenType = ScreenType.video;
-  SubMenuIndex subMenuIndex = SubMenuIndex.none;
+  SubMenuIndex _subMenuIndex = SubMenuIndex.none;
   bool isKeyboardVisible = false;
+
 
   static final List<String> _titles = <String>[
     'tab_menu1'.tr,
@@ -75,18 +75,18 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
     switch (currentScreenType) {
       case ScreenType.video:
         return const VideoScreen();
-      case ScreenType.createRecord:
-        return CreateRecord(onBackButtonPressed: () {
+      case ScreenType.exerciseRecord:
+        return ExerciseRecordWidget(onBackButtonPressed: () {
+          setState(() {
+            _setCurrentScreen(ScreenType.video);
+          }  );
+        }, subMenuIndex: _subMenuIndex);
+      case ScreenType.exerciseHistory:
+        return ExerciseHistoryWidget(onBackButtonPressed: () {
           setState(() {
             _setCurrentScreen(ScreenType.video);
           });
-        }, subMenuIndex: subMenuIndex);
-      case ScreenType.viewRecord:
-        return ViewRecord(onBackButtonPressed: () {
-          setState(() {
-            _setCurrentScreen(ScreenType.video);
-          });
-        }, subMenuIndex: subMenuIndex);
+        }, subMenuIndex: _subMenuIndex);
       default:
         logger.w('Invalid screen type: $currentScreenType');
         return const SizedBox(); // 혹은 다른 기본 위젯
@@ -122,12 +122,13 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
 
   void _handleSubMenuTap(SubMenuIndex subMenuIndex) {
     setState(() {
+      _subMenuIndex = subMenuIndex;
       if (selectedIndex == 0) {
         // 첫 번째 탭의 하위 메뉴 선택시
-        _setCurrentScreen(ScreenType.createRecord);
+        _setCurrentScreen(ScreenType.exerciseRecord);
       } else if (selectedIndex == 1) {
         // 두 번째 탭의 하위 메뉴 선택시
-        _setCurrentScreen(ScreenType.viewRecord);
+        _setCurrentScreen(ScreenType.exerciseHistory);
       }
       _showSubMenu = false;
     });

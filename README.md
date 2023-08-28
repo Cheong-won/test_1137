@@ -43,10 +43,15 @@ BE - Mock API사용
 프로젝트 빌드 & 테스트 & 실행 방법
 
 미해결 이슈 정리
-- DB 활용 방안
+- DB 활용 방안 ()
 - UI 테스트 코드 작성
 - Login 시 토큰 관리 추가 필요
 - 테스트 코드 보강
 - firebase 사용하여 push 알림 추가
 - android keystore 처리
 - permission 처리(ios, android)
+- CI/CD 구성
+- 운동 기록 보기시 하위 메뉴 클릭시 해당 운동에 대한 기록만 볼수 있게 rest api 필터 추가 필더
+- 이미지 webp 확장자 일원
+- 백키 처리, 종표 팝업 처리
+- 

@@ -52,6 +52,7 @@ dependencies:
   drift: ^2.8.0
   get_it: ^7.6.0
   video_player: ^2.7.0
+  image_picker: ^1.0.2
 
 dev_dependencies:
   flutter_test:
