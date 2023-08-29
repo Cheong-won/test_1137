@@ -9,7 +9,6 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
-  final TextEditingController _idController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final LoginController _loginController =  Get.find<LoginController>();
   bool _isLoginFailed = false;
@@ -36,31 +35,33 @@ class _LoginWidgetState extends State<LoginWidget> {
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                'login_error'.tr,
-                style: TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red),
               ),
             )
         ],
       ),
       actions: [
         TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('login_cancel'.tr),
+        ),
+        TextButton(
           onPressed: () async {
+            final NavigatorState navigator = Navigator.of(context);
             bool loginSuccessful = await _handleLogin();
             if (!loginSuccessful) {
               setState(() {
                 _isLoginFailed = true;
               });
             } else {
-              Navigator.of(context).pop();
+              navigator.pop();
             }
           },
           child: Text('login_button'.tr),
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('login_cancel'.tr),
-        ),
+
       ],
     );
   }

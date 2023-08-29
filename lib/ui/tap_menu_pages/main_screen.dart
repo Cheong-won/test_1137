@@ -158,53 +158,90 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
     );
   }
 
+  Future<bool> _onWillPop() async {
+    if (_showSubMenu) {
+      setState(() {
+        _showSubMenu = false;
+      });
+      return false;
+    }
+
+    if (currentScreenType != ScreenType.video) {
+      setState(() {
+        _setCurrentScreen(ScreenType.video);
+      });
+      return false;
+    }
+
+    return (await showDialog(
+      context: context!,
+      builder: (context) => AlertDialog(
+        title: Text('exit'.tr),
+        content: Text('do_you_want_to_exit'.tr),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('no'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('yes'.tr),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        bottomNavigationBar: (currentScreenType == ScreenType.video && !isKeyboardVisible)
-         ? BottomNavigationBar(
-          key: bottomNavigationKey,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home),
-              label: 'tab_menu1'.tr,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.open_in_new_rounded),
-              label: 'tab_menu2'.tr,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.open_in_new_rounded),
-              label: _isLogin ? 'logout'.tr:'tab_menu3'.tr,
-            ),
-          ],
-          currentIndex: selectedIndex,
-          selectedItemColor: Colors.amber[800],
-          onTap: _onItemTapped,
-        ): null,
-        body: Stack(
-          children: [
-            // 컨텐츠 내용
-            Container(
-              alignment: Alignment.center,
-              child: _getCurrentScreen(),
-            ),
-            if (_showSubMenu)
-              Positioned(
-                left: _iconXPosition,
-                bottom: 0.h,
-                child: SubMenuWidget(
-                  onTapSubMenu: (subMenuIndex) {
-                    setState(() {
-                      logger.d('onTapSubMenu: $subMenuIndex');
-                      _handleSubMenuTap(subMenuIndex);
-                    });
-                  },
-                ),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          bottomNavigationBar: (currentScreenType == ScreenType.video && !isKeyboardVisible)
+           ? BottomNavigationBar(
+            key: bottomNavigationKey,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.home),
+                label: 'tab_menu1'.tr,
               ),
-          ],
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: 'tab_menu2'.tr,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: _isLogin ? 'logout'.tr:'tab_menu3'.tr,
+              ),
+            ],
+            currentIndex: selectedIndex,
+            selectedItemColor: Colors.amber[800],
+            onTap: _onItemTapped,
+          ): null,
+          body: Stack(
+            children: [
+              // 컨텐츠 내용
+              Container(
+                alignment: Alignment.center,
+                child: _getCurrentScreen(),
+              ),
+              if (_showSubMenu)
+                Positioned(
+                  left: _iconXPosition,
+                  bottom: 0.h,
+                  child: SubMenuWidget(
+                    onTapSubMenu: (subMenuIndex) {
+                      setState(() {
+                        logger.d('onTapSubMenu: $subMenuIndex');
+                        _handleSubMenuTap(subMenuIndex);
+                      });
+                    },
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

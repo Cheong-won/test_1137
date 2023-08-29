@@ -31,9 +31,9 @@ The Fittix Test Project
 Flutter 사전 과제 #1 5
 
 API 설계
-- 로그인
-- 운동 기록하기
-- 운동 기록 보기
+- 로그인 (storage 처리하)
+- 운동 기록하기 (저장은 하지 않으며 기록 중, 저장 완료처리만된)
+- 운동 기록 보기 (mock api 호출)
 
 개발 환경
 FE - Flutter
@@ -48,10 +48,11 @@ BE - Mock API사용
 - Login 시 토큰 관리 추가 필요
 - 테스트 코드 보강 (unit test, widget test)
 - firebase 사용하여 push 알림 추가
+- 앱 업데이트 처리
 - android keystore 처리
 - permission 처리(ios, android)
 - CI/CD 구성
 - 운동 기록 보기시 하위 메뉴 클릭시 해당 운동에 대한 기록만 볼수 있게 rest api 필터 추가 필더
 - 이미지 webp 확장자 일원
 - 백키 처리, 종표 팝업 처리
-- 
+- 운동 기록 하기, 운동기록 보기 (실제 API 구현 필요)

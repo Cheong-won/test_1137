@@ -27,6 +27,10 @@ class Languages extends Translations {
           'simple_status_message_input': '간단한 상태 메세지 입력',
           'exercise_date': '운동 일자',
           'record': '기록하기',
+          'exit': '종료',
+          'do_you_want_to_exit': '앱을 종료하시겠습니까?',
+          'no': '아니오',
+          'yes': '예',
 
         },
 
