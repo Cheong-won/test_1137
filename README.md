@@ -46,7 +46,7 @@ BE - Mock API사용
 - DB 활용 방안 ()
 - UI 테스트 코드 작성
 - Login 시 토큰 관리 추가 필요
-- 테스트 코드 보강
+- 테스트 코드 보강 (unit test, widget test)
 - firebase 사용하여 push 알림 추가
 - android keystore 처리
 - permission 처리(ios, android)

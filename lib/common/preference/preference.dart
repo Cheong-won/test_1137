@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 
 enum PreferenceType {
   undefined("undefined"),
-  isFirstLaunched("firstLaunch");
+  isLogin("login");
 
   const PreferenceType(this.value);
 
@@ -29,11 +29,11 @@ class Preference  {
   }
 
   Future<Preference> init() async {
-    var first = read(PreferenceType.isFirstLaunched);
+    var first = read(PreferenceType.isLogin);
     if ( first == null){
-      write(PreferenceType.isFirstLaunched, true);
+      write(PreferenceType.isLogin, true);
     }
-    isFirstLaunch = read(PreferenceType.isFirstLaunched);
+    isFirstLaunch = read(PreferenceType.isLogin);
 
     return this;
   }

@@ -1,3 +1,4 @@
+import 'package:fittrix/controller/login_controller.dart';
 import 'package:fittrix/ui/tap_menu_pages/Exercise_history_widget.dart';
 import 'package:fittrix/ui/tap_menu_pages/Exercise_record_widget.dart';
 import 'package:fittrix/ui/tap_menu_pages/video_screen.dart';
@@ -31,6 +32,8 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
   ScreenType currentScreenType = ScreenType.video;
   SubMenuIndex _subMenuIndex = SubMenuIndex.none;
   bool isKeyboardVisible = false;
+  final LoginController _loginController = Get.find<LoginController>();
+  bool _isLogin = false;
 
 
   static final List<String> _titles = <String>[
@@ -45,6 +48,9 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _loginController.isLoggedIn.listen((trigger) {
+      _isLogin = trigger;
+    });
   }
   @override
   void dispose() {
@@ -96,6 +102,10 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
   void _onItemTapped(int index) {
     setState(() {
       if (index == 0 || index == 1) {
+        if (!_isLogin){
+          _showLoginPopup(context);
+          return;
+        }
         if (selectedIndex == index) {
           // 동일한 탭이 다시 선택되면 서브 메뉴 표시를 토글
           _showSubMenu = !_showSubMenu;

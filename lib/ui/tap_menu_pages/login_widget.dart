@@ -1,3 +1,4 @@
+import 'package:fittrix/controller/login_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ class LoginWidget extends StatefulWidget {
 class _LoginWidgetState extends State<LoginWidget> {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final LoginController _loginController =  Get.find<LoginController>();
   bool _isLoginFailed = false;
 
   @override
@@ -19,14 +21,8 @@ class _LoginWidgetState extends State<LoginWidget> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextField(
-            controller: _idController,
-            decoration: InputDecoration(
-              labelText: 'login_id'.tr,
-              hintText: 'enter_your_id'.tr,
-            ),
-          ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
+          //password field
           TextField(
             controller: _passwordController,
             decoration: InputDecoration(
@@ -70,11 +66,6 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   Future<bool> _handleLogin() async {
-    // TODO: 로그인 처리를 여기에서 구현합니다.
-    // 예제에서는 임의의 로직을 사용하겠습니다.
-    if (_idController.text == 'admin' && _passwordController.text == 'password') {
-      return true;
-    }
-    return false;
+    return await _loginController.login(_passwordController.text);
   }
 }
