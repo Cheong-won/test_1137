@@ -15,4 +15,8 @@ class LoginController extends GetxController {
     }
     return false;
   }
+  void logout(){
+    isLoggedIn.value = false;
+    _preference.write(PreferenceType.isLogin, false);
+  }
 }

@@ -15,6 +15,7 @@ class Languages extends Translations {
           'sub_menu3' : '푸시업',
           'sub_menu4' : '레그 레이즈',
           'login': '로그인',
+          'logout': '로그아웃',
           'login_id': '아이디',
           'enter_your_id': '아이디를 입력해주세요.',
           'login_password': '비밀번호',

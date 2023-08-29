@@ -123,7 +123,11 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
         _showSubMenu = false;
         selectedIndex = index;
         if (index == 2) {
-          _showLoginPopup(context);
+          if (_isLogin){
+            _loginController.logout();
+          } else {
+            _showLoginPopup(context);
+          }
           return;
         }
       }
@@ -139,6 +143,8 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
       } else if (selectedIndex == 1) {
         // 두 번째 탭의 하위 메뉴 선택시
         _setCurrentScreen(ScreenType.exerciseHistory);
+      } else {
+        logger.w('Invalid selected index: $selectedIndex');
       }
       _showSubMenu = false;
     });
@@ -171,7 +177,7 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.open_in_new_rounded),
-              label: 'tab_menu3'.tr,
+              label: _isLogin ? 'logout'.tr:'tab_menu3'.tr,
             ),
           ],
           currentIndex: selectedIndex,
