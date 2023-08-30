@@ -11,12 +11,12 @@ class SetupEnv extends Env {
   SetupEnv(this.env);
 
   @override
-  Future? onInjection() async {
+  Future<void> onInjection() async {
     configureDependencies(env: env);
   }
 
   @override
-  FutureOr<void> onCreate() async {
+  Future<void> onCreate() async {
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
