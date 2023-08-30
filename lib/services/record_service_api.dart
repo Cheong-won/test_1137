@@ -9,6 +9,6 @@ abstract class RecordServiceAPI {
   factory RecordServiceAPI(Dio dio, {String baseUrl}) = _RecordServiceAPI;
 
   @GET('/records/')
-  Future<List<RecordItem>>? getRecords();
+  Future<List<RecordItem>?> getRecords();
 
 }

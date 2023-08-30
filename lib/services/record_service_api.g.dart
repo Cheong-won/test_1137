@@ -19,7 +19,7 @@ class _RecordServiceAPI implements RecordServiceAPI {
   String? baseUrl;
 
   @override
-  Future<List<RecordItem>> getRecords() async {
+  Future<List<RecordItem>?> getRecords() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -41,8 +41,8 @@ class _RecordServiceAPI implements RecordServiceAPI {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    var value = _result.data!
-        .map((dynamic i) => RecordItem.fromJson(i as Map<String, dynamic>))
+    var value = _result.data
+        ?.map((dynamic i) => RecordItem.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }

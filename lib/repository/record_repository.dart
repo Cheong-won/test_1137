@@ -5,7 +5,7 @@ import '../services/record_service_api.dart';
 
  abstract class RecordRepository{
 
-   Future<List<RecordItem>>? records();
+   Future<List<RecordItem>?> records();
 
  }
 
@@ -15,9 +15,13 @@ class RecordRepositoryImpl implements RecordRepository{
   RecordRepositoryImpl({required this.api});
 
   @override
-  Future<List<RecordItem>>? records() {
-    return api.getRecords();
+  Future<List<RecordItem>?> records() async {
+    try {
+      return await api.getRecords();
+    } catch (e) {
+      // 예외 처리 로직
+      return null; // 또는 적절한 예외를 던지거나, 에러를 기록합니다.
+    }
   }
-
 
 }
