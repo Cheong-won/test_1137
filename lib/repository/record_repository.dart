@@ -1,4 +1,4 @@
- import 'dart:async';
+
 import 'package:fittrix/models/response/record_item.dart';
 import 'package:injectable/injectable.dart';
 import '../services/record_service_api.dart';
@@ -11,12 +11,12 @@ import '../services/record_service_api.dart';
 
 @Injectable(as: RecordRepository)
 class RecordRepositoryImpl implements RecordRepository{
-  RecordServiceAPI? api;
+  RecordServiceAPI api;
   RecordRepositoryImpl({required this.api});
 
   @override
   Future<List<RecordItem>>? records() {
-    return api?.getRecords();
+    return api.getRecords();
   }
 
 
