@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
+
 import 'di/di.dart';
 import 'di/network/http_overrides.dart';
 import 'main_application.dart';
@@ -42,6 +45,7 @@ class SetupEnv {
   }
 
   Future<void> _onInjection() async {
+    GetStorage.init();
     configureDependencies(env: env);
   }
 

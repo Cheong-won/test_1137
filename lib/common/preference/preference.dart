@@ -4,17 +4,8 @@ import 'package:logger/logger.dart';
 
 
 enum PreferenceType {
-  undefined("undefined"),
-  isLogin("login");
-
-  const PreferenceType(this.value);
-
-  final String value;
-
-  factory PreferenceType.getByCode(String typeValue){
-    return PreferenceType.values.firstWhere((value) => value.value == typeValue,
-        orElse: () => PreferenceType.undefined);
-  }
+  undefined,
+  isLogin;
 }
 
 @singleton
@@ -23,6 +14,7 @@ class Preference  {
   bool isFirstLaunch = false;
   var logger = Logger();
   static const String DefaultValue = "";
+  final storage = GetStorage();
 
   Preference(){
     init();
@@ -39,14 +31,14 @@ class Preference  {
   }
 
   void write(PreferenceType key, dynamic value) {
-    GetStorage().write(key.name, value);
+    storage.write(key.name, value);
   }
 
   dynamic read(PreferenceType key){
-    return GetStorage().read(key.name);
+    return storage.read(key.name);
   }
 
   void logout(){
-    var storage = GetStorage();
+    storage.erase();
   }
 }
