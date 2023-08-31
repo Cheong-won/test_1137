@@ -11,9 +11,8 @@ enum PreferenceType {
 @singleton
 class Preference  {
   //const define
-  bool isFirstLaunch = false;
+  bool isLogin = false;
   var logger = Logger();
-  static const String DefaultValue = "";
   final storage = GetStorage();
 
   Preference(){
@@ -25,7 +24,7 @@ class Preference  {
     if ( first == null){
       write(PreferenceType.isLogin, true);
     }
-    isFirstLaunch = read(PreferenceType.isLogin);
+    isLogin = read(PreferenceType.isLogin);
 
     return this;
   }
@@ -40,5 +39,6 @@ class Preference  {
 
   void logout(){
     storage.erase();
+    isLogin = false;
   }
 }

@@ -51,6 +51,7 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
     _loginController.isLoggedIn.listen((trigger) {
       _isLogin = trigger;
     });
+    _isLogin = _loginController.isLoggedIn.value;
   }
   @override
   void dispose() {
