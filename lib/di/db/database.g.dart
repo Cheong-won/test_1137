@@ -3,377 +3,44 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
+class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TodosTable(this.attachedDatabase, [this._alias]);
+  $RecordsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
+      'id', aliasedName, true,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  static const VerificationMeta _descMeta = const VerificationMeta('desc');
   @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 32),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
-  static const VerificationMeta _contentMeta =
-      const VerificationMeta('content');
-  @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+  late final GeneratedColumn<String> desc = GeneratedColumn<String>(
       'body', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _categoryMeta =
-      const VerificationMeta('category');
   @override
-  late final GeneratedColumn<int> category = GeneratedColumn<int>(
-      'category', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _dueDateMeta =
-      const VerificationMeta('dueDate');
+  List<GeneratedColumn> get $columns => [id, desc];
   @override
-  late final GeneratedColumn<DateTime> dueDate = GeneratedColumn<DateTime>(
-      'due_date', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _priorityMeta =
-      const VerificationMeta('priority');
+  String get aliasedName => _alias ?? 'records';
   @override
-  late final GeneratedColumn<int> priority = GeneratedColumn<int>(
-      'priority', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+  String get actualTableName => 'records';
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, title, content, category, dueDate, priority];
-  @override
-  String get aliasedName => _alias ?? 'todos';
-  @override
-  String get actualTableName => 'todos';
-  @override
-  VerificationContext validateIntegrity(Insertable<Todo> instance,
+  VerificationContext validateIntegrity(Insertable<Record> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
-    } else if (isInserting) {
-      context.missing(_titleMeta);
     }
     if (data.containsKey('body')) {
-      context.handle(_contentMeta,
-          content.isAcceptableOrUnknown(data['body']!, _contentMeta));
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    if (data.containsKey('category')) {
-      context.handle(_categoryMeta,
-          category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
-    }
-    if (data.containsKey('due_date')) {
-      context.handle(_dueDateMeta,
-          dueDate.isAcceptableOrUnknown(data['due_date']!, _dueDateMeta));
-    }
-    if (data.containsKey('priority')) {
-      context.handle(_priorityMeta,
-          priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Todo map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Todo(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      content: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
-      category: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}category']),
-      dueDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}due_date']),
-      priority: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}priority']),
-    );
-  }
-
-  @override
-  $TodosTable createAlias(String alias) {
-    return $TodosTable(attachedDatabase, alias);
-  }
-}
-
-class Todo extends DataClass implements Insertable<Todo> {
-  final int id;
-  final String title;
-  final String content;
-  final int? category;
-  final DateTime? dueDate;
-  final int? priority;
-  const Todo(
-      {required this.id,
-      required this.title,
-      required this.content,
-      this.category,
-      this.dueDate,
-      this.priority});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['title'] = Variable<String>(title);
-    map['body'] = Variable<String>(content);
-    if (!nullToAbsent || category != null) {
-      map['category'] = Variable<int>(category);
-    }
-    if (!nullToAbsent || dueDate != null) {
-      map['due_date'] = Variable<DateTime>(dueDate);
-    }
-    if (!nullToAbsent || priority != null) {
-      map['priority'] = Variable<int>(priority);
-    }
-    return map;
-  }
-
-  TodosCompanion toCompanion(bool nullToAbsent) {
-    return TodosCompanion(
-      id: Value(id),
-      title: Value(title),
-      content: Value(content),
-      category: category == null && nullToAbsent
-          ? const Value.absent()
-          : Value(category),
-      dueDate: dueDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(dueDate),
-      priority: priority == null && nullToAbsent
-          ? const Value.absent()
-          : Value(priority),
-    );
-  }
-
-  factory Todo.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Todo(
-      id: serializer.fromJson<int>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
-      content: serializer.fromJson<String>(json['content']),
-      category: serializer.fromJson<int?>(json['category']),
-      dueDate: serializer.fromJson<DateTime?>(json['dueDate']),
-      priority: serializer.fromJson<int?>(json['priority']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'title': serializer.toJson<String>(title),
-      'content': serializer.toJson<String>(content),
-      'category': serializer.toJson<int?>(category),
-      'dueDate': serializer.toJson<DateTime?>(dueDate),
-      'priority': serializer.toJson<int?>(priority),
-    };
-  }
-
-  Todo copyWith(
-          {int? id,
-          String? title,
-          String? content,
-          Value<int?> category = const Value.absent(),
-          Value<DateTime?> dueDate = const Value.absent(),
-          Value<int?> priority = const Value.absent()}) =>
-      Todo(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        content: content ?? this.content,
-        category: category.present ? category.value : this.category,
-        dueDate: dueDate.present ? dueDate.value : this.dueDate,
-        priority: priority.present ? priority.value : this.priority,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Todo(')
-          ..write('id: $id, ')
-          ..write('title: $title, ')
-          ..write('content: $content, ')
-          ..write('category: $category, ')
-          ..write('dueDate: $dueDate, ')
-          ..write('priority: $priority')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, title, content, category, dueDate, priority);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Todo &&
-          other.id == this.id &&
-          other.title == this.title &&
-          other.content == this.content &&
-          other.category == this.category &&
-          other.dueDate == this.dueDate &&
-          other.priority == this.priority);
-}
-
-class TodosCompanion extends UpdateCompanion<Todo> {
-  final Value<int> id;
-  final Value<String> title;
-  final Value<String> content;
-  final Value<int?> category;
-  final Value<DateTime?> dueDate;
-  final Value<int?> priority;
-  const TodosCompanion({
-    this.id = const Value.absent(),
-    this.title = const Value.absent(),
-    this.content = const Value.absent(),
-    this.category = const Value.absent(),
-    this.dueDate = const Value.absent(),
-    this.priority = const Value.absent(),
-  });
-  TodosCompanion.insert({
-    this.id = const Value.absent(),
-    required String title,
-    required String content,
-    this.category = const Value.absent(),
-    this.dueDate = const Value.absent(),
-    this.priority = const Value.absent(),
-  })  : title = Value(title),
-        content = Value(content);
-  static Insertable<Todo> custom({
-    Expression<int>? id,
-    Expression<String>? title,
-    Expression<String>? content,
-    Expression<int>? category,
-    Expression<DateTime>? dueDate,
-    Expression<int>? priority,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (title != null) 'title': title,
-      if (content != null) 'body': content,
-      if (category != null) 'category': category,
-      if (dueDate != null) 'due_date': dueDate,
-      if (priority != null) 'priority': priority,
-    });
-  }
-
-  TodosCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? title,
-      Value<String>? content,
-      Value<int?>? category,
-      Value<DateTime?>? dueDate,
-      Value<int?>? priority}) {
-    return TodosCompanion(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      content: content ?? this.content,
-      category: category ?? this.category,
-      dueDate: dueDate ?? this.dueDate,
-      priority: priority ?? this.priority,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (content.present) {
-      map['body'] = Variable<String>(content.value);
-    }
-    if (category.present) {
-      map['category'] = Variable<int>(category.value);
-    }
-    if (dueDate.present) {
-      map['due_date'] = Variable<DateTime>(dueDate.value);
-    }
-    if (priority.present) {
-      map['priority'] = Variable<int>(priority.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('TodosCompanion(')
-          ..write('id: $id, ')
-          ..write('title: $title, ')
-          ..write('content: $content, ')
-          ..write('category: $category, ')
-          ..write('dueDate: $dueDate, ')
-          ..write('priority: $priority')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $CategoriesTable extends Categories
-    with TableInfo<$CategoriesTable, Category> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $CategoriesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [id, description];
-  @override
-  String get aliasedName => _alias ?? 'categories';
-  @override
-  String get actualTableName => 'categories';
-  @override
-  VerificationContext validateIntegrity(Insertable<Category> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('description')) {
       context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
+          _descMeta, desc.isAcceptableOrUnknown(data['body']!, _descMeta));
     } else if (isInserting) {
-      context.missing(_descriptionMeta);
+      context.missing(_descMeta);
     }
     return context;
   }
@@ -381,106 +48,107 @@ class $CategoriesTable extends Categories
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Record map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Category(
+    return Record(
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      desc: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
     );
   }
 
   @override
-  $CategoriesTable createAlias(String alias) {
-    return $CategoriesTable(attachedDatabase, alias);
+  $RecordsTable createAlias(String alias) {
+    return $RecordsTable(attachedDatabase, alias);
   }
 }
 
-class Category extends DataClass implements Insertable<Category> {
-  final int id;
-  final String description;
-  const Category({required this.id, required this.description});
+class Record extends DataClass implements Insertable<Record> {
+  final int? id;
+  final String desc;
+  const Record({this.id, required this.desc});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['description'] = Variable<String>(description);
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
+    map['body'] = Variable<String>(desc);
     return map;
   }
 
-  CategoriesCompanion toCompanion(bool nullToAbsent) {
-    return CategoriesCompanion(
-      id: Value(id),
-      description: Value(description),
+  RecordsCompanion toCompanion(bool nullToAbsent) {
+    return RecordsCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      desc: Value(desc),
     );
   }
 
-  factory Category.fromJson(Map<String, dynamic> json,
+  factory Record.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Category(
-      id: serializer.fromJson<int>(json['id']),
-      description: serializer.fromJson<String>(json['description']),
+    return Record(
+      id: serializer.fromJson<int?>(json['id']),
+      desc: serializer.fromJson<String>(json['desc']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'description': serializer.toJson<String>(description),
+      'id': serializer.toJson<int?>(id),
+      'desc': serializer.toJson<String>(desc),
     };
   }
 
-  Category copyWith({int? id, String? description}) => Category(
-        id: id ?? this.id,
-        description: description ?? this.description,
+  Record copyWith({Value<int?> id = const Value.absent(), String? desc}) =>
+      Record(
+        id: id.present ? id.value : this.id,
+        desc: desc ?? this.desc,
       );
   @override
   String toString() {
-    return (StringBuffer('Category(')
+    return (StringBuffer('Record(')
           ..write('id: $id, ')
-          ..write('description: $description')
+          ..write('desc: $desc')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, description);
+  int get hashCode => Object.hash(id, desc);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Category &&
-          other.id == this.id &&
-          other.description == this.description);
+      (other is Record && other.id == this.id && other.desc == this.desc);
 }
 
-class CategoriesCompanion extends UpdateCompanion<Category> {
-  final Value<int> id;
-  final Value<String> description;
-  const CategoriesCompanion({
+class RecordsCompanion extends UpdateCompanion<Record> {
+  final Value<int?> id;
+  final Value<String> desc;
+  const RecordsCompanion({
     this.id = const Value.absent(),
-    this.description = const Value.absent(),
+    this.desc = const Value.absent(),
   });
-  CategoriesCompanion.insert({
+  RecordsCompanion.insert({
     this.id = const Value.absent(),
-    required String description,
-  }) : description = Value(description);
-  static Insertable<Category> custom({
+    required String desc,
+  }) : desc = Value(desc);
+  static Insertable<Record> custom({
     Expression<int>? id,
-    Expression<String>? description,
+    Expression<String>? desc,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (description != null) 'description': description,
+      if (desc != null) 'body': desc,
     });
   }
 
-  CategoriesCompanion copyWith({Value<int>? id, Value<String>? description}) {
-    return CategoriesCompanion(
+  RecordsCompanion copyWith({Value<int?>? id, Value<String>? desc}) {
+    return RecordsCompanion(
       id: id ?? this.id,
-      description: description ?? this.description,
+      desc: desc ?? this.desc,
     );
   }
 
@@ -490,29 +158,28 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (desc.present) {
+      map['body'] = Variable<String>(desc.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('CategoriesCompanion(')
+    return (StringBuffer('RecordsCompanion(')
           ..write('id: $id, ')
-          ..write('description: $description')
+          ..write('desc: $desc')
           ..write(')'))
         .toString();
   }
 }
 
-abstract class _$NiceWaterDatabase extends GeneratedDatabase {
-  _$NiceWaterDatabase(QueryExecutor e) : super(e);
-  late final $TodosTable todos = $TodosTable(this);
-  late final $CategoriesTable categories = $CategoriesTable(this);
+abstract class _$FittrixDatabase extends GeneratedDatabase {
+  _$FittrixDatabase(QueryExecutor e) : super(e);
+  late final $RecordsTable records = $RecordsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [todos, categories];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [records];
 }

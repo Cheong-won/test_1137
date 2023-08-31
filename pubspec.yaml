@@ -54,6 +54,9 @@ dependencies:
   video_player: ^2.7.0
   image_picker: ^1.0.2
   code_builder: ^4.6.0
+  sqlite3_flutter_libs: ^0.5.16
+  path: ^1.8.2
+
 
 dev_dependencies:
   flutter_test:

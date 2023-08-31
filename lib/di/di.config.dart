@@ -45,11 +45,13 @@ extension GetItInjectableX on _i1.GetIt {
       registerFor: {_prod},
     );
     gh.factory<_i6.Dio>(() => networkModule.dio);
-    gh.singleton<_i7.NiceWaterDatabase>(_i7.NiceWaterDatabase());
+    gh.singleton<_i7.FittrixDatabase>(_i7.FittrixDatabase());
     gh.singleton<_i8.Preference>(_i8.Preference());
     gh.factory<_i9.RecordServiceAPI>(() => networkModule.recordSvc);
-    gh.factory<_i10.RecordRepository>(
-        () => _i10.RecordRepositoryImpl(api: gh<_i9.RecordServiceAPI>()));
+    gh.factory<_i10.RecordRepository>(() => _i10.RecordRepositoryImpl(
+          api: gh<_i9.RecordServiceAPI>(),
+          database: gh<_i7.FittrixDatabase>(),
+        ));
     return this;
   }
 }

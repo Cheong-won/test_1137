@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:fittrix/di/db/database.dart';
 import 'package:fittrix/ui/common/common_header.dart';
 import 'package:fittrix/ui/common/sub_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+
+import '../../controller/record_controller.dart';
 
 
 class ExerciseRecordWidget extends StatefulWidget {
@@ -26,6 +29,7 @@ class ExerciseRecordWidget extends StatefulWidget {
 class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
   final logger = Logger();
   String? _statusMessage;
+  final _recordCnt = Get.find<RecordController>();
   Map<SubMenuIndex, String> exerciseImages = {
     SubMenuIndex.first: 'assets/images/lunge.png',
     SubMenuIndex.second: 'assets/images/squat.webp',
@@ -40,7 +44,12 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
     var ret =  exerciseImages[widget.subMenuIndex] ?? 'assets/images/default_image_path.jpeg';
     return ret;
   }
+  void _clearStatusMessage() {
+    setState(() {
+      _statusMessage = null;
+    });
 
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -71,14 +80,17 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
                   },
                   decoration: InputDecoration(
                     hintText: 'simple_status_message_input'.tr,
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 SizedBox(height: 20.h),
                 ElevatedButton(
                   onPressed: () {
-                    // TODO: 필요한 기능을 여기에 추가
-                    print('운동 기록 저장: $_statusMessage');
+                    var item = Record(
+                      desc: _statusMessage ?? 'No message',
+                    );
+                    _recordCnt.insertRecord(item);
+                    _clearStatusMessage();
                   },
                   child: Text('record'.tr),
                 )

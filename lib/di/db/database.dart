@@ -11,10 +11,10 @@ import 'package:path/path.dart' as p;
 part 'database.g.dart';
 
 @Singleton()
-@DriftDatabase(tables: [Todos, Categories])
-class NiceWaterDatabase extends _$NiceWaterDatabase {
+@DriftDatabase(tables: [Records])
+class FittrixDatabase extends _$FittrixDatabase {
   // we tell the database where to store the data with this constructor
-  NiceWaterDatabase() : super(_openConnection());
+  FittrixDatabase() : super(_openConnection());
 
   // you should bump this number whenever you change or add a table definition.
   // Migrations are covered later in the documentation.
@@ -28,28 +28,19 @@ class NiceWaterDatabase extends _$NiceWaterDatabase {
         await m.createAll();
       },
       onUpgrade: (Migrator m, int from, int to) async {
-        if (from < 2) {
-          // we added the dueDate property in the change from version 1 to
-          // version 2
-          await m.addColumn(todos, todos.dueDate as GeneratedColumn<Object>);
-        }
-        if (from < 3) {
-          // we added the priority property in the change from version 1 or 2
-          // to version 3
-          await m.addColumn(todos, todos.priority as GeneratedColumn<Object>);
-        }
+
       },
     );
   }
-  Future<int> addItem(TodosCompanion entry){
-    return into(todos).insert(entry);
+  Future<int> addItem(Insertable<Record> record){
+    return into(records).insert(record);
   }
 
   //loads
-  Future<List<Todo>> get allTodoEntries => select(todos).get();
+  Future<List<Record>> get allRecordEntries => select(records).get();
 
   Future delTodo(data) {
-    return delete(todos).delete(data);
+    return delete(records).delete(data);
   }
 }
 
@@ -59,7 +50,7 @@ LazyDatabase _openConnection() {
     // put the database file, called db.sqlite here, into the documents folder
     // for your app.
     final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'nice_water_db.sqlite'));
+    final file = File(p.join(dbFolder.path, 'fittrix_db.sqlite'));
     return NativeDatabase(file);
   });
 }

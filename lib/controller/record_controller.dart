@@ -1,3 +1,4 @@
+import 'package:fittrix/di/db/database.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import '../../di/di.dart';
 import '../models/response/record_item.dart';
@@ -26,5 +27,9 @@ class RecordController extends BaseController {
     }
 
     _isLoading.value = false; // 데이터 로드 완료 후에 false로 설정
+  }
+
+  void insertRecord(Record record) {
+    _repository.insertRecord(record);
   }
 }
