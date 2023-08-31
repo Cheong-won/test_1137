@@ -1,31 +1,59 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'di/di.dart';
-import 'di/env/env.dart';
+import 'di/network/http_overrides.dart';
 import 'main_application.dart';
 var logger = Logger();
-class SetupEnv extends Env {
+class SetupEnv {
+  Future<void>? futureInit;
   String env = "dev";
-  SetupEnv(this.env);
+  SetupEnv(this.env){
+    _init();
+  }
 
-  @override
-  Future<void> onInjection() async {
+  _init() async {
+    futureInit = _onCreate();  // Future를 변수에 저장
+    // FutureBuilder를 사용하여 Future가 완료되면 화면을 그리도록 함(함수 호출시 바로 호출되어 문제가 발생)
+    final StatefulWidget app = FutureBuilder(
+      future: futureInit,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            color: Colors.green,
+          );
+        } else if (snapshot.hasError) {
+          return Container(
+            color: Colors.transparent,
+          );
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          return onCreateView();
+        } else {
+          return Container(
+            color: Colors.transparent,
+          );
+        }
+      },
+    );
+
+    runApp(app);
+  }
+
+  Future<void> _onInjection() async {
     configureDependencies(env: env);
   }
 
-  @override
-  Future<void> onCreate() async {
+
+  Future<void> _onCreate() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    HttpOverrides.global = MyHttpOverrides();
+
+    await _onInjection();
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-
-
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //     statusBarColor: Colors.transparent,
-    //     statusBarIconBrightness: Brightness.light,
-    //     systemNavigationBarColor: AppTheme.mCInk500,
     //     systemNavigationBarIconBrightness: Brightness.light));
   }
 

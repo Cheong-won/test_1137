@@ -25,8 +25,11 @@ The Fittix Test Project
 작업 리스트 항목
 - network 모듈 사용
 - 메인 화면 구성
-- bottom menu 구성
+- bottom menu(navigation bar) 구성
 - common ui 구성
+- mock api 구성
+- mvvm 패턴 적용(controller getX 사용, 나머지 get_it 사용)
+- 
 
 Flutter 사전 과제 #1 5
 
@@ -53,6 +56,7 @@ BE - Mock API사용
 - permission 처리(ios, android)
 - CI/CD 구성
 - 운동 기록 보기시 하위 메뉴 클릭시 해당 운동에 대한 기록만 볼수 있게 rest api 필터 추가 필더
-- 이미지 webp 확장자 일원
-- 백키 처리, 종표 팝업 처리
+- 이미지 webp 확장자 일원화
 - 운동 기록 하기, 운동기록 보기 (실제 API 구현 필요)
+- iOS 기본 테스트 필요.
+- 사용자 정보 Preference 관리 필요
