@@ -37,6 +37,13 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
     SubMenuIndex.fourth: 'assets/images/leg_raise.webp',
   };
 
+  final fieldText = TextEditingController();
+
+  @override
+  initState() {
+    super.initState();
+    fieldText.text = _recordCnt.inputDesc.value;
+  }
 
   String _getExerciseImage(){
     logger.d('subMenuIndex: ${widget.subMenuIndex}');
@@ -45,9 +52,8 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
     return ret;
   }
   void _clearStatusMessage() {
-    setState(() {
-      _statusMessage = null;
-    });
+    fieldText.clear();
+    widget.onBackButtonPressed();
 
   }
   @override
@@ -75,8 +81,10 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
                 ),
                 SizedBox(height: 20.h),
                 TextField(
+                  controller: fieldText,
                   onChanged: (value) {
                     _statusMessage = value;
+                    _recordCnt.updateDesc(value);
                   },
                   decoration: InputDecoration(
                     hintText: 'simple_status_message_input'.tr,

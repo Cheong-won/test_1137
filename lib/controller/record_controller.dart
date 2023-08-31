@@ -9,6 +9,7 @@ class RecordController extends BaseController {
   final RecordRepository _repository = getIt<RecordRepository>();
   final _recordItems = RxList<RecordItem>([]);
   final _isLoading = RxBool(false); // isLoading을 RxBool로 선언
+  final inputDesc = RxString('');
 
   List<RecordItem>? get recordItems => _recordItems.value;
   bool get isLoading => _isLoading.value; // isLoading의 getter
@@ -31,5 +32,10 @@ class RecordController extends BaseController {
 
   void insertRecord(Record record) {
     _repository.insertRecord(record);
+    updateDesc("");
+  }
+
+  void updateDesc(String desc) {
+    inputDesc.value = desc;
   }
 }
