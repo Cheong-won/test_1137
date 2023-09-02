@@ -32,7 +32,9 @@ class Languages extends Translations {
           'no': '아니오',
           'yes': '예',
           "enter_message": "메시지를 입력해주세요.",
-          "record_saved": "정상적으로 저장되었습니다."
+          "record_saved": "정상적으로 저장되었습니다.",
+          "no_records_available": "기록이 없습니다.",
+
 
         },
 

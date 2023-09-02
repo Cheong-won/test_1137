@@ -46,7 +46,7 @@ class _ExerciseHistoryWidgetState extends State<ExerciseHistoryWidget> {
               }
 
               if (_recordViewModel.recordItems == null || _recordViewModel.recordItems !.isEmpty) {
-                return Center(child: Text("No records available"));
+                return Center(child: Text('no_records_available'.tr));
               }
 
               return ListView.builder(
