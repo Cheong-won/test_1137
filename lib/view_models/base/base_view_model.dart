@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 
-class BaseController extends GetxController{
+class BaseViewModel extends GetxController{
   final logger = Logger();
 
 

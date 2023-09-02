@@ -2,8 +2,9 @@ import 'package:fittrix/di/di.dart';
 import 'package:get/get.dart';
 
 import '../common/preference/preference.dart';
+import 'base/base_view_model.dart';
 
-class LoginController extends GetxController {
+class LoginViewModel extends BaseViewModel {
   var isLoggedIn = false.obs; // Reactive 상태
   final Preference _preference = getIt.get<Preference>();
 

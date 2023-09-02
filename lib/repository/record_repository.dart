@@ -7,7 +7,7 @@ import '../services/record_service_api.dart';
 abstract class RecordRepository {
   Future<List<RecordItem>?> records();
 
-  Future<void> insertRecord(Record record);
+  Future<int> insertRecord(Record record);
 }
 
 @Injectable(as: RecordRepository)

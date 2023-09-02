@@ -1,4 +1,4 @@
-import 'package:fittrix/controller/login_controller.dart';
+import 'package:fittrix/view_models/login_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +12,7 @@ class LoginWidget extends StatefulWidget {
 
 class _LoginWidgetState extends State<LoginWidget> {
   final TextEditingController _passwordController = TextEditingController();
-  final LoginController _loginController =  Get.find<LoginController>();
+  final LoginViewModel _loginViewModel =  Get.find<LoginViewModel>();
   bool _isLoginFailed = false;
 
   @override
@@ -69,6 +69,6 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   Future<bool> _handleLogin() async {
-    return await _loginController.login(_passwordController.text);
+    return await _loginViewModel.login(_passwordController.text);
   }
 }

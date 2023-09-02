@@ -2,9 +2,7 @@ import 'package:fittrix/ui/common/common_header.dart';
 import 'package:fittrix/ui/common/sub_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import '../../controller/record_controller.dart';
-import '../../models/response/record_item.dart';
+import '../../view_models/record_view_model.dart';
 
 class ExerciseHistoryWidget extends StatefulWidget {
   const ExerciseHistoryWidget({
@@ -19,12 +17,12 @@ class ExerciseHistoryWidget extends StatefulWidget {
 }
 
 class _ExerciseHistoryWidgetState extends State<ExerciseHistoryWidget> {
-  final _recordCnt = Get.find<RecordController>();
+  final _recordViewModel = Get.find<RecordViewModel>();
 
   @override
   void initState() {
     super.initState();
-    _recordCnt.loadRecords();
+    _recordViewModel.loadRecords();
   }
 
 
@@ -43,18 +41,18 @@ class _ExerciseHistoryWidgetState extends State<ExerciseHistoryWidget> {
         Expanded(
           child: Obx(
                 () {
-              if (_recordCnt.isLoading) { // _isLoading도 RxBool 타입이어야 합니다.
+              if (_recordViewModel.isLoading) { // _isLoading도 RxBool 타입이어야 합니다.
                 return Center(child: CircularProgressIndicator());
               }
 
-              if (_recordCnt.recordItems == null || _recordCnt.recordItems !.isEmpty) {
+              if (_recordViewModel.recordItems == null || _recordViewModel.recordItems !.isEmpty) {
                 return Center(child: Text("No records available"));
               }
 
               return ListView.builder(
-                itemCount: _recordCnt.recordItems !.length,
+                itemCount: _recordViewModel.recordItems !.length,
                 itemBuilder: (context, index) {
-                  final record = _recordCnt.recordItems ![index % _recordCnt.recordItems !.length];
+                  final record = _recordViewModel.recordItems ![index % _recordViewModel.recordItems !.length];
                   return Column(
                     children: [
                       Card(

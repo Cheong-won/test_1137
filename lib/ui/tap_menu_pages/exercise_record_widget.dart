@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:fittrix/di/db/database.dart';
 import 'package:fittrix/ui/common/common_header.dart';
 import 'package:fittrix/ui/common/sub_menu_widget.dart';
+import 'package:fittrix/view_models/record_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
-import '../../controller/record_controller.dart';
 
 
 class ExerciseRecordWidget extends StatefulWidget {
@@ -29,7 +29,7 @@ class ExerciseRecordWidget extends StatefulWidget {
 class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
   final logger = Logger();
   String? _statusMessage;
-  final _recordCnt = Get.find<RecordController>();
+  final _recordViewModel = Get.find<RecordViewModel>();
   Map<SubMenuIndex, String> exerciseImages = {
     SubMenuIndex.first: 'assets/images/lunge.png',
     SubMenuIndex.second: 'assets/images/squat.webp',
@@ -42,7 +42,7 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
   @override
   initState() {
     super.initState();
-    fieldText.text = _recordCnt.inputDesc.value;
+    fieldText.text = _recordViewModel.inputDesc.value;
   }
 
   String _getExerciseImage(){
@@ -84,7 +84,7 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
                   controller: fieldText,
                   onChanged: (value) {
                     _statusMessage = value;
-                    _recordCnt.updateDesc(value);
+                    _recordViewModel.updateDesc(value);
                   },
                   decoration: InputDecoration(
                     hintText: 'simple_status_message_input'.tr,
@@ -97,7 +97,7 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
                     var item = Record(
                       desc: _statusMessage ?? 'No message',
                     );
-                    _recordCnt.insertRecord(item);
+                    _recordViewModel.insertRecord(item);
                     _clearStatusMessage();
                   },
                   child: Text('record'.tr),

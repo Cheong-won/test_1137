@@ -1,7 +1,7 @@
-import 'package:fittrix/controller/login_controller.dart';
 import 'package:fittrix/ui/tap_menu_pages/Exercise_history_widget.dart';
 import 'package:fittrix/ui/tap_menu_pages/Exercise_record_widget.dart';
 import 'package:fittrix/ui/tap_menu_pages/video_screen.dart';
+import 'package:fittrix/view_models/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -32,7 +32,7 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
   ScreenType currentScreenType = ScreenType.video;
   SubMenuIndex _subMenuIndex = SubMenuIndex.none;
   bool isKeyboardVisible = false;
-  final LoginController _loginController = Get.find<LoginController>();
+  final LoginViewModel _loginViewModel = Get.find<LoginViewModel>();
   bool _isLogin = false;
 
 
@@ -48,10 +48,10 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _loginController.isLoggedIn.listen((trigger) {
+    _loginViewModel.isLoggedIn.listen((trigger) {
       _isLogin = trigger;
     });
-    _isLogin = _loginController.isLoggedIn.value;
+    _isLogin = _loginViewModel.isLoggedIn.value;
   }
   @override
   void dispose() {
@@ -125,7 +125,7 @@ class _MainScreen extends State<MainScreen> with WidgetsBindingObserver {
         selectedIndex = index;
         if (index == 2) {
           if (_isLogin){
-            _loginController.logout();
+            _loginViewModel.logout();
           } else {
             _showLoginPopup(context);
           }
