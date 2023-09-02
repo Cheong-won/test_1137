@@ -42,6 +42,7 @@ The Fittrix Test Project
 
 ## 환경 구성
 ### 프로젝트 빌드
+![image](https://github.com/Cheong-won/test_1137/assets/86540469/61daf001-6a78-47b9-8cff-e78f3f30cc5e)
 - Android Studio 사용 시, 개발과 운영 환경 설정 필요
 #### 개발
 - `main_dev.dart`, build flavor -> dev
