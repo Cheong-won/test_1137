@@ -25,11 +25,13 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
       'created_at', aliasedName, true,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      defaultValue: currentDateAndTime);
+      type: DriftSqlType.string,
+      requiredDuringInsert: false, clientDefault: () {
+    DateTime now = DateTime.now();
+    return "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+  });
   @override
   List<GeneratedColumn> get $columns => [id, desc, createdAt];
   @override
@@ -68,7 +70,7 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
       desc: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}desc'])!,
       createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
+          .read(DriftSqlType.string, data['${effectivePrefix}created_at']),
     );
   }
 
@@ -81,7 +83,7 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
 class Record extends DataClass implements Insertable<Record> {
   final int? id;
   final String desc;
-  final DateTime? createdAt;
+  final String? createdAt;
   const Record({this.id, required this.desc, this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -91,7 +93,7 @@ class Record extends DataClass implements Insertable<Record> {
     }
     map['desc'] = Variable<String>(desc);
     if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<DateTime>(createdAt);
+      map['created_at'] = Variable<String>(createdAt);
     }
     return map;
   }
@@ -112,7 +114,7 @@ class Record extends DataClass implements Insertable<Record> {
     return Record(
       id: serializer.fromJson<int?>(json['id']),
       desc: serializer.fromJson<String>(json['desc']),
-      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      createdAt: serializer.fromJson<String?>(json['createdAt']),
     );
   }
   @override
@@ -121,14 +123,14 @@ class Record extends DataClass implements Insertable<Record> {
     return <String, dynamic>{
       'id': serializer.toJson<int?>(id),
       'desc': serializer.toJson<String>(desc),
-      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'createdAt': serializer.toJson<String?>(createdAt),
     };
   }
 
   Record copyWith(
           {Value<int?> id = const Value.absent(),
           String? desc,
-          Value<DateTime?> createdAt = const Value.absent()}) =>
+          Value<String?> createdAt = const Value.absent()}) =>
       Record(
         id: id.present ? id.value : this.id,
         desc: desc ?? this.desc,
@@ -158,7 +160,7 @@ class Record extends DataClass implements Insertable<Record> {
 class RecordsCompanion extends UpdateCompanion<Record> {
   final Value<int?> id;
   final Value<String> desc;
-  final Value<DateTime?> createdAt;
+  final Value<String?> createdAt;
   const RecordsCompanion({
     this.id = const Value.absent(),
     this.desc = const Value.absent(),
@@ -172,7 +174,7 @@ class RecordsCompanion extends UpdateCompanion<Record> {
   static Insertable<Record> custom({
     Expression<int>? id,
     Expression<String>? desc,
-    Expression<DateTime>? createdAt,
+    Expression<String>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -182,7 +184,7 @@ class RecordsCompanion extends UpdateCompanion<Record> {
   }
 
   RecordsCompanion copyWith(
-      {Value<int?>? id, Value<String>? desc, Value<DateTime?>? createdAt}) {
+      {Value<int?>? id, Value<String>? desc, Value<String?>? createdAt}) {
     return RecordsCompanion(
       id: id ?? this.id,
       desc: desc ?? this.desc,
@@ -200,7 +202,7 @@ class RecordsCompanion extends UpdateCompanion<Record> {
       map['desc'] = Variable<String>(desc.value);
     }
     if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+      map['created_at'] = Variable<String>(createdAt.value);
     }
     return map;
   }

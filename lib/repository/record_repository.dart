@@ -30,6 +30,6 @@ class RecordRepositoryImpl implements RecordRepository {
   @override
   Future<int> insertRecord(Record record) async {
     var item = record.toCompanion(true);
-    return await database.addItem(item);
+    return await database.addRecord(item);
   }
 }

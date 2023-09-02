@@ -36,13 +36,15 @@ class FittrixDatabase extends _$FittrixDatabase {
       },
     );
   }
-  Future<int> addItem(RecordsCompanion record){
+  //insert
+  Future<int> addRecord(RecordsCompanion record){
     return into(records).insert(record);
   }
 
   //loads
   Future<List<Record>> get allRecordEntries => select(records).get();
 
+  //delete
   Future delRecord(data) {
     return delete(records).delete(data);
   }

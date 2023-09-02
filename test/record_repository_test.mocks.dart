@@ -355,10 +355,10 @@ class MockFittrixDatabase extends _i1.Mock implements _i3.FittrixDatabase {
         ),
       ) as _i2.DatabaseConnectionUser);
   @override
-  _i5.Future<int> addItem(_i2.Insertable<_i3.Record>? record) =>
+  _i5.Future<int> addRecord(_i3.RecordsCompanion? record) =>
       (super.noSuchMethod(
         Invocation.method(
-          #addItem,
+          #addRecord,
           [record],
         ),
         returnValue: _i5.Future<int>.value(0),

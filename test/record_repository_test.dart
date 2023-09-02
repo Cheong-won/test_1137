@@ -50,11 +50,11 @@ void main() {
 
     var item = record.toCompanion(true);
     // Set up the mock database to expect an insert call
-    when(mockDatabase.addItem(item)).thenAnswer((_) async => 1);
+    when(mockDatabase.addRecord(item)).thenAnswer((_) async => 1);
 
     await repository.insertRecord(record);
 
     // Verify that the insert method was called with the correct record
-    verify(mockDatabase.addItem(item));
+    verify(mockDatabase.addRecord(item));
   });
 }
