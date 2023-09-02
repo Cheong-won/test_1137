@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CommonHeader extends StatelessWidget {
-   final VoidCallback onBackButtonPressed;
+  final VoidCallback onBackButtonPressed;
+  final String title;
 
-  const CommonHeader({super.key, required this.onBackButtonPressed});
+  const CommonHeader({Key? key, required this.onBackButtonPressed, required this.title}) : super(key: key); // Modified constructor
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class CommonHeader extends StatelessWidget {
             icon: const Icon(Icons.arrow_back),
             onPressed: onBackButtonPressed,
           ),
-          const Text('Create Record'),
+          Text(title),
         ],
       ),
     );

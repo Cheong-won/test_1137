@@ -37,7 +37,7 @@ class _ExerciseHistoryWidgetState extends State<ExerciseHistoryWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CommonHeader(onBackButtonPressed: widget.onBackButtonPressed),
+        CommonHeader(onBackButtonPressed: widget.onBackButtonPressed, title: 'tab_menu2'.tr),
         Expanded(
           child: Obx(
                 () {

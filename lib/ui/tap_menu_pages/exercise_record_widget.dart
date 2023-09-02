@@ -76,7 +76,7 @@ class _ExerciseRecordWidget extends State<ExerciseRecordWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CommonHeader(onBackButtonPressed: widget.onBackButtonPressed),
+        CommonHeader(onBackButtonPressed: widget.onBackButtonPressed, title: 'tab_menu1'.tr),
         Expanded(
           child: Container(
             alignment: Alignment.bottomCenter,
