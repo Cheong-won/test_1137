@@ -22,6 +22,14 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
   late final GeneratedColumn<String> desc = GeneratedColumn<String>(
       'desc', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _exerciseDateMeta =
+      const VerificationMeta('exerciseDate');
+  @override
+  late final GeneratedColumn<DateTime> exerciseDate = GeneratedColumn<DateTime>(
+      'exercise_date', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: Constant(DateTime.now()));
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -33,7 +41,7 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
     return "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
   });
   @override
-  List<GeneratedColumn> get $columns => [id, desc, createdAt];
+  List<GeneratedColumn> get $columns => [id, desc, exerciseDate, createdAt];
   @override
   String get aliasedName => _alias ?? 'records';
   @override
@@ -52,6 +60,12 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
     } else if (isInserting) {
       context.missing(_descMeta);
     }
+    if (data.containsKey('exercise_date')) {
+      context.handle(
+          _exerciseDateMeta,
+          exerciseDate.isAcceptableOrUnknown(
+              data['exercise_date']!, _exerciseDateMeta));
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -69,6 +83,8 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
       desc: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}desc'])!,
+      exerciseDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}exercise_date'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}created_at']),
     );
@@ -83,8 +99,13 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, Record> {
 class Record extends DataClass implements Insertable<Record> {
   final int? id;
   final String desc;
+  final DateTime exerciseDate;
   final String? createdAt;
-  const Record({this.id, required this.desc, this.createdAt});
+  const Record(
+      {this.id,
+      required this.desc,
+      required this.exerciseDate,
+      this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -92,6 +113,7 @@ class Record extends DataClass implements Insertable<Record> {
       map['id'] = Variable<int>(id);
     }
     map['desc'] = Variable<String>(desc);
+    map['exercise_date'] = Variable<DateTime>(exerciseDate);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<String>(createdAt);
     }
@@ -102,6 +124,7 @@ class Record extends DataClass implements Insertable<Record> {
     return RecordsCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       desc: Value(desc),
+      exerciseDate: Value(exerciseDate),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -114,6 +137,7 @@ class Record extends DataClass implements Insertable<Record> {
     return Record(
       id: serializer.fromJson<int?>(json['id']),
       desc: serializer.fromJson<String>(json['desc']),
+      exerciseDate: serializer.fromJson<DateTime>(json['exerciseDate']),
       createdAt: serializer.fromJson<String?>(json['createdAt']),
     );
   }
@@ -123,6 +147,7 @@ class Record extends DataClass implements Insertable<Record> {
     return <String, dynamic>{
       'id': serializer.toJson<int?>(id),
       'desc': serializer.toJson<String>(desc),
+      'exerciseDate': serializer.toJson<DateTime>(exerciseDate),
       'createdAt': serializer.toJson<String?>(createdAt),
     };
   }
@@ -130,10 +155,12 @@ class Record extends DataClass implements Insertable<Record> {
   Record copyWith(
           {Value<int?> id = const Value.absent(),
           String? desc,
+          DateTime? exerciseDate,
           Value<String?> createdAt = const Value.absent()}) =>
       Record(
         id: id.present ? id.value : this.id,
         desc: desc ?? this.desc,
+        exerciseDate: exerciseDate ?? this.exerciseDate,
         createdAt: createdAt.present ? createdAt.value : this.createdAt,
       );
   @override
@@ -141,53 +168,64 @@ class Record extends DataClass implements Insertable<Record> {
     return (StringBuffer('Record(')
           ..write('id: $id, ')
           ..write('desc: $desc, ')
+          ..write('exerciseDate: $exerciseDate, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, desc, createdAt);
+  int get hashCode => Object.hash(id, desc, exerciseDate, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Record &&
           other.id == this.id &&
           other.desc == this.desc &&
+          other.exerciseDate == this.exerciseDate &&
           other.createdAt == this.createdAt);
 }
 
 class RecordsCompanion extends UpdateCompanion<Record> {
   final Value<int?> id;
   final Value<String> desc;
+  final Value<DateTime> exerciseDate;
   final Value<String?> createdAt;
   const RecordsCompanion({
     this.id = const Value.absent(),
     this.desc = const Value.absent(),
+    this.exerciseDate = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   RecordsCompanion.insert({
     this.id = const Value.absent(),
     required String desc,
+    this.exerciseDate = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : desc = Value(desc);
   static Insertable<Record> custom({
     Expression<int>? id,
     Expression<String>? desc,
+    Expression<DateTime>? exerciseDate,
     Expression<String>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (desc != null) 'desc': desc,
+      if (exerciseDate != null) 'exercise_date': exerciseDate,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
 
   RecordsCompanion copyWith(
-      {Value<int?>? id, Value<String>? desc, Value<String?>? createdAt}) {
+      {Value<int?>? id,
+      Value<String>? desc,
+      Value<DateTime>? exerciseDate,
+      Value<String?>? createdAt}) {
     return RecordsCompanion(
       id: id ?? this.id,
       desc: desc ?? this.desc,
+      exerciseDate: exerciseDate ?? this.exerciseDate,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -201,6 +239,9 @@ class RecordsCompanion extends UpdateCompanion<Record> {
     if (desc.present) {
       map['desc'] = Variable<String>(desc.value);
     }
+    if (exerciseDate.present) {
+      map['exercise_date'] = Variable<DateTime>(exerciseDate.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
@@ -212,6 +253,7 @@ class RecordsCompanion extends UpdateCompanion<Record> {
     return (StringBuffer('RecordsCompanion(')
           ..write('id: $id, ')
           ..write('desc: $desc, ')
+          ..write('exerciseDate: $exerciseDate, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();

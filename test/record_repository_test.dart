@@ -44,7 +44,8 @@ void main() {
   });
 
   test('Insert record into database', () async {
-    const record = Record(
+    var record = Record(
+      exerciseDate: DateTime.now(),
       desc: 'Sample Description',
     );
 

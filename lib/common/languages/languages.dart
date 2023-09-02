@@ -31,6 +31,8 @@ class Languages extends Translations {
           'do_you_want_to_exit': '앱을 종료하시겠습니까?',
           'no': '아니오',
           'yes': '예',
+          "enter_message": "메시지를 입력해주세요.",
+          "record_saved": "정상적으로 저장되었습니다."
 
         },
 
