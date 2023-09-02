@@ -28,12 +28,8 @@ class RecordRepositoryImpl implements RecordRepository {
   }
 
   @override
-  Future<void> insertRecord(Record record) async {
-    try{
-      await database.addItem(record);
-    } catch (e) {
-      logger.e(e);
-    }
-
+  Future<int> insertRecord(Record record) async {
+    var item = record.toCompanion(true);
+    return await database.addItem(item);
   }
 }

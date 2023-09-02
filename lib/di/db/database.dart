@@ -19,7 +19,7 @@ class FittrixDatabase extends _$FittrixDatabase {
   // you should bump this number whenever you change or add a table definition.
   // Migrations are covered later in the documentation.
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -28,18 +28,22 @@ class FittrixDatabase extends _$FittrixDatabase {
         await m.createAll();
       },
       onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 4) {
+          await m.addColumn(records, records.createdAt as GeneratedColumn<Object>);
+          // 이 부분에 새 컬럼을 추가하는 로직을 넣을 수 있습니다.
+        }
 
       },
     );
   }
-  Future<int> addItem(Insertable<Record> record){
+  Future<int> addItem(RecordsCompanion record){
     return into(records).insert(record);
   }
 
   //loads
   Future<List<Record>> get allRecordEntries => select(records).get();
 
-  Future delTodo(data) {
+  Future delRecord(data) {
     return delete(records).delete(data);
   }
 }
